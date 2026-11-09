@@ -1,0 +1,84 @@
+---
+// Text section of a case ("03 · Challenge and context", "05 · Design system and solution"):
+// heading on the left, text column on the right (desktop); one column on mobile.
+// Optional parts: lead (big statement), context (grey line), paragraphs (body text), fields (info fields).
+import InfoField from './InfoField.astro';
+
+interface Props {
+  heading: string;
+  lead?: string;
+  context?: string;
+  paragraphs?: string[];
+  fields?: { label: string; value: string }[];
+}
+const { heading, lead, context, paragraphs = [], fields = [] } = Astro.props;
+const wide = Boolean(lead);
+---
+<section class:list={['case-text', { 'case-text--wide': wide }]}>
+  <div class="case-text__inner">
+    <h2 class="case-text__heading t-h2">{heading}</h2>
+    <div class="case-text__body">
+      {lead && <p class="case-text__lead">{lead}</p>}
+      {context && <p class="case-text__context">{context}</p>}
+      {paragraphs.length > 0 && (
+        <div class="case-text__paragraphs">
+          {paragraphs.map((p) => (
+            <p>{p.split('\n').map((line, i) => (<>{i > 0 && <br />}{line}</>))}</p>
+          ))}
+        </div>
+      )}
+      {fields.length > 0 && (
+        <dl class="case-text__fields">
+          {fields.map((f) => <InfoField label={f.label} value={f.value} />)}
+        </dl>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .case-text { padding-block: var(--section-pad); background: var(--color-bg-page); }
+  .case-text__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-32);
+    max-width: calc(var(--content-max) + 2 * var(--page-margin));
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+  .case-text__body { display: flex; flex-direction: column; gap: var(--space-32); min-width: 0; }
+
+  /* Lead: Mobile/H3 (medium 20) → AK/Desktop/Lead (regular 32/40) */
+  .case-text__lead {
+    font-size: clamp(20px, 15.5px + 1.146vw, 32px);
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+    text-wrap: pretty;
+  }
+  .case-text__context {
+    color: var(--color-text-secondary);
+    font-size: var(--type-body-l);
+    line-height: 1.5;
+  }
+  .case-text__paragraphs { font-size: var(--type-body-l); line-height: 1.5; }
+  .case-text__paragraphs p + p { margin-top: 1.5em; }
+  .case-text__fields { display: flex; flex-direction: column; gap: var(--space-24); margin: 0; }
+
+  @media (min-width: 768px) {
+    .case-text__context,
+    .case-text__paragraphs { letter-spacing: -0.005em; }
+  }
+
+  @media (min-width: 1024px) {
+    .case-text__inner {
+      grid-template-columns: minmax(0, 416fr) minmax(0, 746fr);
+      column-gap: clamp(var(--space-48), 9.3vw, 134px);
+    }
+    .case-text--wide .case-text__inner {
+      grid-template-columns: minmax(0, 416fr) minmax(0, 856fr);
+      column-gap: var(--layout-gutter-desktop);
+    }
+    .case-text__lead { font-weight: 400; letter-spacing: 0; }
+  }
+</style>

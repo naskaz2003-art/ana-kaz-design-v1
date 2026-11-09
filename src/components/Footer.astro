@@ -4,8 +4,10 @@ import Icon from './Icon.astro';
 import SmartLink from './SmartLink.astro';
 import SocialButtons from './SocialButtons.astro';
 import site from '../data/site.json';
-import { linkFor } from '../lib/links';
+import { linkFor, homeHref } from '../lib/links';
 
+interface Props { onHome?: boolean }
+const { onHome = true } = Astro.props;
 const f = site.footer;
 const email = site.links.email.trim();
 ---
@@ -30,7 +32,7 @@ const email = site.links.email.trim();
 
       <ul class="footer__list footer__contact" role="list" aria-label="Contact">
         <li><SmartLink class="nav-link nav-link--dark" href={linkFor('email')}>{email || f.emailPlaceholder}</SmartLink></li>
-        <li><a class="nav-link nav-link--dark" href="#work">{f.portfolio}</a></li>
+        <li><a class="nav-link nav-link--dark" href={homeHref('#work', onHome)}>{f.portfolio}</a></li>
         <li><SmartLink class="nav-link nav-link--dark" href={linkFor('resume')}>{f.resume}</SmartLink></li>
       </ul>
     </div>

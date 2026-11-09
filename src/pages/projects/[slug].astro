@@ -1,0 +1,98 @@
+---
+// Case study pages. Every file in src/data/cases/ becomes a page at /projects/<file name>/.
+// The blocks of the page follow the order of "blocks" in that file: text, image, summary, gallery.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import BackToTop from '../../components/BackToTop.astro';
+import CaseHero from '../../components/case/CaseHero.astro';
+import CaseText from '../../components/case/CaseText.astro';
+import CaseSummary from '../../components/case/CaseSummary.astro';
+import CaseImage from '../../components/case/CaseImage.astro';
+import ProjectNav from '../../components/case/ProjectNav.astro';
+import site from '../../data/site.json';
+
+type Field = { label: string; value: string };
+type Img = { image: string; imageAlt: string; caption?: string };
+type Block =
+  | { type: 'text'; heading: string; lead?: string; context?: string; paragraphs?: string[]; fields?: Field[] }
+  | ({ type: 'image'; ratio: string } & Img)
+  | { type: 'summary'; label: string; fields: Field[] }
+  | { type: 'gallery'; ratio: string; items: Img[] };
+type CaseData = { title: string; hero: { image: string; imageAlt: string }; meta: Field[]; blocks: Block[] };
+
+export function getStaticPaths() {
+  const files = import.meta.glob<{ default: CaseData }>('../../data/cases/*.json', { eager: true });
+  return Object.entries(files).map(([path, mod]) => ({
+    params: { slug: path.split('/').pop()!.replace(/\.json$/, '') },
+    props: { data: mod.default },
+  }));
+}
+
+const { slug } = Astro.params as { slug: string };
+const { data } = Astro.props as { data: CaseData };
+const client = data.meta.find((m) => /client/i.test(m.label))?.value;
+const pageTitle = `${data.title}${client ? ` · ${client}` : ''} — Kaznacheevskaia Anastasia`;
+const firstText = data.blocks.find((b) => b.type === 'text') as Extract<Block, { type: 'text' }> | undefined;
+const description = firstText?.lead || site.meta.description;
+---
+<BaseLayout title={pageTitle} description={description}>
+  <Header onHome={false} />
+  <main id="main" class="case">
+    <CaseHero slug={slug} title={data.title} hero={data.hero} meta={data.meta} />
+
+    {data.blocks.map((block) => {
+      if (block.type === 'text') {
+        return <CaseText heading={block.heading} lead={block.lead} context={block.context} paragraphs={block.paragraphs} fields={block.fields} />;
+      }
+      if (block.type === 'summary') {
+        return <CaseSummary label={block.label} fields={block.fields} />;
+      }
+      if (block.type === 'image') {
+        return (
+          <div class="case-bleed">
+            <CaseImage slug={slug} ratio={block.ratio} image={block.image} imageAlt={block.imageAlt} caption={block.caption} />
+          </div>
+        );
+      }
+      if (block.type === 'gallery') {
+        return (
+          <div class="case-gallery" style={`--cols: ${block.items.length}`}>
+            {block.items.map((item) => (
+              <CaseImage
+                slug={slug}
+                ratio={block.ratio}
+                image={item.image}
+                imageAlt={item.imageAlt}
+                caption={item.caption}
+                sizes={`(min-width: 768px) ${Math.round(100 / block.items.length)}vw, 100vw`}
+              />
+            ))}
+          </div>
+        );
+      }
+      return null;
+    })}
+
+    <ProjectNav slug={slug} />
+  </main>
+  <Footer onHome={false} />
+  <BackToTop />
+</BaseLayout>
+
+<style>
+  .case { background: var(--color-bg-page); }
+
+  /* Full-width image rows, as in the layout (images run edge to edge) */
+  .case-gallery {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-24);
+    padding-block: var(--space-24);
+  }
+  @media (min-width: 768px) {
+    .case-gallery { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); }
+  }
+  .case-bleed :global(.figure__caption),
+  .case-gallery :global(.figure__caption) { padding-inline: var(--page-margin); }
+</style>

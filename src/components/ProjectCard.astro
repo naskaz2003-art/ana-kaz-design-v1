@@ -5,7 +5,7 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Icon from './Icon.astro';
-import { isExternal } from '../lib/links';
+import { isExternal, resolveHref } from '../lib/links';
 
 interface Props {
   project: { client: string; category: string; year: string; title: string; url: string; image: string; imageAlt: string };
@@ -13,7 +13,7 @@ interface Props {
 const { project } = Astro.props;
 const files = import.meta.glob<{ default: ImageMetadata }>('../assets/projects/*.{jpg,jpeg,png,webp,avif}', { eager: true });
 const img = project.image ? files[`../assets/projects/${project.image}`]?.default : undefined;
-const url = project.url.trim();
+const url = resolveHref(project.url);
 const Tag = url ? 'a' : 'article';
 const external = url !== '' && isExternal(url);
 ---

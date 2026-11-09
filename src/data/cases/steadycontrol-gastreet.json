@@ -1,0 +1,66 @@
+{
+  "title": "Event design",
+  "hero": { "image": "", "imageAlt": "" },
+  "meta": [
+    { "label": "Client / brand", "value": "SteadyControl" },
+    { "label": "Project type", "value": "Event design" },
+    { "label": "Year", "value": "Jun 10, 2024" }
+  ],
+
+  "blocks": [
+    {
+      "type": "text",
+      "heading": "Challenge and context",
+      "lead": "Creation of promotional and exhibition materials for SteadyControl’s participation in GASTREET 2024.",
+      "context": "SteadyControl - staff efficiency improvement system",
+      "fields": [
+        { "label": "Audience", "value": "Owners of business in HoReCa" },
+        { "label": "Business need", "value": "Needed a design for place, marketing events, social media, video, printed materials and visual metaphore for entire event." }
+      ]
+    },
+
+    { "type": "image", "ratio": "16:9", "image": "", "imageAlt": "", "caption": "" },
+
+    {
+      "type": "summary",
+      "label": "Summary",
+      "fields": [
+        { "label": "My role", "value": "Graphic design" },
+        { "label": "Team and timeline", "value": "Marketing team" },
+        { "label": "Outcome", "value": "Successful event" }
+      ]
+    },
+
+    {
+      "type": "gallery",
+      "ratio": "4:5",
+      "items": [
+        { "image": "", "imageAlt": "", "caption": "" },
+        { "image": "", "imageAlt": "", "caption": "" },
+        { "image": "", "imageAlt": "", "caption": "" }
+      ]
+    },
+
+    {
+      "type": "text",
+      "heading": "Design system and solution",
+      "paragraphs": [
+        "SteadyControl needed a cohesive set of visual materials to effectively represent the brand at GASTREET 2024 — one of the key events for the hospitality industry.",
+        "The goal was to create a consistent exhibition identity that would attract visitors’ attention, communicate the company’s value proposition, and support brand recognition across different physical touchpoints.",
+        "Developed a set of exhibition materials, including branded visual assets and promotional elements, following SteadyControl’s existing brand guidelines.\nCreated a unified visual system for the company’s presence at the event.\nPrepared a complete set of exhibition assets adapted for multiple physical formats.",
+        "Improved brand consistency across offline communication channels.\nReduced preparation time for future events by establishing reusable design templates and visual guidelines."
+      ]
+    },
+
+    { "type": "image", "ratio": "16:9", "image": "", "imageAlt": "", "caption": "" },
+
+    {
+      "type": "gallery",
+      "ratio": "4:3",
+      "items": [
+        { "image": "", "imageAlt": "", "caption": "" },
+        { "image": "", "imageAlt": "", "caption": "" }
+      ]
+    }
+  ]
+}

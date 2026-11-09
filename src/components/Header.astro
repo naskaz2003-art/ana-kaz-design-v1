@@ -8,19 +8,22 @@ import Icon from './Icon.astro';
 import SmartLink from './SmartLink.astro';
 import SocialButtons from './SocialButtons.astro';
 import site from '../data/site.json';
-import { linkFor } from '../lib/links';
+import { linkFor, homeHref } from '../lib/links';
 
+interface Props { onHome?: boolean }
+const { onHome = true } = Astro.props;
 const resume = linkFor('resume');
+const work = homeHref('#work', onHome);
 ---
 <header class="site-header" data-state="top" data-menu="closed">
   <div class="site-header__bar">
-    <a class="site-header__logo" href="#top" aria-label="AnaKaz — to the top of the page">
+    <a class="site-header__logo" href={homeHref('#top', onHome)} aria-label={onHome ? 'AnaKaz — to the top of the page' : 'AnaKaz — home page'}>
       <Logo class="site-header__logo-full" />
       <Logo wordmark={false} class="site-header__logo-mark" />
     </a>
 
     <nav class="site-header__nav" aria-label="Main">
-      <a class="nav-link" href="#work">{site.nav.portfolio}</a>
+      <a class="nav-link" href={work}>{site.nav.portfolio}</a>
       <SmartLink class="nav-link" href={resume}>{site.nav.resume}</SmartLink>
     </nav>
 
@@ -43,7 +46,7 @@ const resume = linkFor('resume');
     <div class="site-header__menu" id="site-menu" inert>
       <div class="site-header__menu-inner">
         <ul class="site-header__menu-links">
-          <li><a class="t-h3" href="#work">{site.nav.portfolio}</a></li>
+          <li><a class="t-h3" href={work}>{site.nav.portfolio}</a></li>
           <li><a class="t-h3" href="#contacts">{site.nav.contacts}</a></li>
         </ul>
         <SmartLink class="button button--primary" href={resume}>

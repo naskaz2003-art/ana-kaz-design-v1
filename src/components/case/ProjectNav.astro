@@ -1,0 +1,96 @@
+---
+// "09 · Project navigation": previous project · All projects · next project.
+// Previous / next are the neighbours of this case in src/data/projects.json (the order of cards on the home page).
+// A neighbour without a case link is shown but not clickable.
+import Icon from '../Icon.astro';
+import SmartLink from '../SmartLink.astro';
+import projects from '../../data/projects.json';
+import { resolveHref, homeHref } from '../../lib/links';
+
+interface Props { slug: string; allLabel?: string }
+const { slug, allLabel = 'All projects' } = Astro.props;
+
+const index = projects.findIndex((p) => p.url.replace(/\/+$/, '').endsWith(`projects/${slug}`));
+const neighbour = (step: number) => {
+  if (index < 0 || projects.length < 2) return null;
+  const p = projects[(index + step + projects.length) % projects.length];
+  return { title: p.client, href: resolveHref(p.url) };
+};
+const prev = neighbour(-1);
+const next = neighbour(1);
+---
+<nav class="project-nav" aria-label="Projects">
+  <div class="project-nav__inner">
+    {prev && (
+      <SmartLink class="project-link project-link--prev" href={prev.href}>
+        <span class="project-link__caption">Previous project</span>
+        <span class="project-link__row"><Icon name="arrow-left-24" />{prev.title}</span>
+      </SmartLink>
+    )}
+    {next && (
+      <SmartLink class="project-link project-link--next" href={next.href}>
+        <span class="project-link__caption">Next project</span>
+        <span class="project-link__row">{next.title}<Icon name="arrow-right-24" /></span>
+      </SmartLink>
+    )}
+    <a class="button button--secondary project-nav__all" href={homeHref('#work', false)}>{allLabel}</a>
+  </div>
+</nav>
+
+<style>
+  .project-nav { padding-block: var(--space-64); background: var(--color-bg-page); }
+  .project-nav__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-32);
+    max-width: calc(var(--content-max) + 2 * var(--page-margin));
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  .project-nav__inner > :global(.project-link) {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    color: var(--color-text-primary);
+  }
+  .project-nav__inner > :global(.project-link--next) { align-items: flex-end; }
+  .project-nav__inner > :global(.project-link)::after {
+    content: '';
+    align-self: stretch;
+    height: 2px;
+    background: var(--color-accent);
+    opacity: 0;
+    transition: opacity var(--dur-hover) var(--ease-out);
+  }
+  .project-link__caption { color: var(--color-text-secondary); font-size: var(--type-label); font-weight: 500; line-height: 1.3; letter-spacing: 0.005em; }
+  .project-link__row {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-12);
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .project-link__row :global(.icon) { width: 24px; height: 24px; flex: none; transition: transform var(--dur-hover) var(--ease-out); }
+  @media (hover: hover) {
+    .project-nav__inner > :global(a.project-link:hover)::after { opacity: 1; }
+    .project-nav__inner > :global(a.project-link--prev:hover) .project-link__row :global(.icon) { transform: translateX(-3px); }
+    .project-nav__inner > :global(a.project-link--next:hover) .project-link__row :global(.icon) { transform: translateX(3px); }
+  }
+
+  @media (min-width: 768px) {
+    .project-nav { padding-block: var(--space-96); }
+    .project-nav__inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      grid-template-areas: 'prev all next';
+      align-items: center;
+    }
+    .project-nav__inner > :global(.project-link--prev) { grid-area: prev; justify-self: start; }
+    .project-nav__inner > :global(.project-link--next) { grid-area: next; justify-self: end; }
+    .project-nav__all { grid-area: all; }
+  }
+</style>
