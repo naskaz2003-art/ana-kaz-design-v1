@@ -1,0 +1,123 @@
+---
+// "Project card" component (Size L on desktop, Size S on mobile).
+// With a case URL the whole card is a link: on hover the cover zooms in and the orange arrow badge appears;
+// on touch screens the badge is always visible. Without a URL the card is shown without link and badge.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Icon from './Icon.astro';
+import { isExternal } from '../lib/links';
+
+interface Props {
+  project: { client: string; category: string; year: string; title: string; url: string; image: string; imageAlt: string };
+}
+const { project } = Astro.props;
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/projects/*.{jpg,jpeg,png,webp,avif}', { eager: true });
+const img = project.image ? files[`../assets/projects/${project.image}`]?.default : undefined;
+const url = project.url.trim();
+const Tag = url ? 'a' : 'article';
+const external = url !== '' && isExternal(url);
+---
+<Tag
+  class:list={['card', { 'card--link': url, 'card--placeholder': !img }]}
+  href={url || undefined}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+>
+  <div class="card__media">
+    {img ? (
+      <Image
+        src={img}
+        alt={project.imageAlt}
+        widths={[400, 640, 832, 1248]}
+        sizes="(min-width: 768px) 30vw, 100vw"
+        class="card__image"
+      />
+    ) : (
+      <div class="card__image card__placeholder"><span class="t-label">{project.client}</span></div>
+    )}
+    {url && <span class="card__badge" aria-hidden="true"><Icon name="arrow-up-right" /></span>}
+  </div>
+  <p class="card__meta t-label">
+    <span>{project.category}</span>
+    <span>{project.year}</span>
+  </p>
+  <h3 class="card__title">{project.title}</h3>
+</Tag>
+
+<style>
+  .card {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    color: var(--color-text-primary);
+  }
+  .card--link { border-radius: var(--radius-8); }
+  .card--link:focus-visible { outline-offset: 6px; }
+
+  .card__media {
+    position: relative;
+    aspect-ratio: var(--ratio-1-1);
+    border-radius: var(--radius-8);
+    overflow: hidden;
+    background: var(--color-bg-inverse);
+  }
+  .card__media :global(.card__image) {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    transition: transform var(--dur-card) var(--ease-out);
+  }
+  .card__placeholder {
+    display: grid;
+    place-items: center;
+    background: var(--color-bg-placeholder);
+    color: var(--color-text-secondary);
+  }
+
+  /* Badge: orange circle with an arrow — hidden until hover on devices with a mouse */
+  .card__badge {
+    position: absolute;
+    top: var(--space-16);
+    right: var(--space-16);
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-text-inverse-muted);
+    color: var(--color-text-inverse);
+  }
+  .card--placeholder .card__badge { border-color: var(--color-border-brand); color: var(--color-text-brand); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .card__badge {
+      top: 28px;
+      border: 0;
+      background: var(--color-bg-accent);
+      color: var(--color-text-on-accent);
+      opacity: 0;
+      transition: opacity var(--dur-card) var(--ease-out), transform var(--dur-card) var(--ease-out);
+    }
+    .card--placeholder .card__badge { color: var(--color-text-on-accent); }
+    .card--link:hover :global(.card__image),
+    .card--link:focus-visible :global(.card__image) { transform: scale(1.04); }
+    .card--link:hover .card__badge,
+    .card--link:focus-visible .card__badge { opacity: 1; transform: translateY(-12px); }
+  }
+
+  .card__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-16);
+    color: var(--color-text-secondary);
+  }
+  .card__title {
+    font-size: clamp(20px, 11.27cqi - 18.9px, 28px);   /* Mobile/H3 20 at 345 px → Desktop/H3 28 at 416 px card width */
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: pretty;
+  }
+</style>

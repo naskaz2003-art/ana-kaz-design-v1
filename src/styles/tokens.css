@@ -1,0 +1,91 @@
+/* Design tokens — generated from the Figma variables of Site-anakazdesign (page "Ready for publish", 2026-11-09).
+   Source: design-tokens/figma-variables.json. Names match the Figma Dev Mode code syntax.
+   Change a value here and it updates everywhere on the site. */
+
+:root {
+  /* Primitives */
+  --prim-blue-950: #081650;
+  --prim-blue-800: #0e2a8c;
+  --prim-blue-600: #2450c8;
+  --prim-blue-300: #94b4e8;
+  --prim-blue-100: #dce8f8;
+  --prim-blue-50: #f1f5fb;
+  --prim-orange-500: #ff6a3d;
+  --prim-orange-600: #e5521f;
+  --prim-neutral-0: #ffffff;
+  --prim-neutral-50: #f6f7f9;
+  --prim-neutral-200: #d8dee9;
+  --prim-neutral-500: #8a93a6;
+  --prim-neutral-600: #5a6275;
+  --prim-neutral-900: #0e1222;
+  --prim-white-a24: rgb(255 255 255 / 0.24);
+  --prim-white-a72: rgb(255 255 255 / 0.72);
+  --prim-blue950-a56: rgb(8 22 80 / 0.56);
+  --prim-white-a0: rgb(255 255 255 / 0);
+  --prim-white-a06: rgb(255 255 255 / 0.06);
+  --prim-neutral200-a0: rgb(216 222 233 / 0);
+  --prim-orange-a12: rgb(255 106 61 / 0.12);
+  --prim-neutral-100: #eceff4;
+
+  /* Color */
+  --color-bg-page: var(--prim-neutral-50);
+  --color-bg-surface: var(--prim-neutral-0);
+  --color-bg-tint: var(--prim-blue-100);
+  --color-bg-header: rgb(255 255 255 / 0.6);
+  --color-bg-brand: var(--prim-blue-800);
+  --color-bg-inverse: var(--prim-blue-800);
+  --color-bg-accent: var(--prim-orange-500);
+  --color-bg-scrim: var(--prim-blue950-a56);
+  --color-bg-scrim-2: rgb(14 18 34 / 0.6);
+  --color-bg-inverse-subtle: var(--prim-white-a24);
+  --color-text-primary: var(--prim-neutral-900);
+  --color-text-secondary: var(--prim-neutral-600);
+  --color-text-brand: var(--prim-blue-800);
+  --color-text-link: var(--prim-blue-600);
+  --color-text-inverse: var(--prim-neutral-0);
+  --color-text-inverse-muted: var(--prim-white-a72);
+  --color-text-accent: var(--prim-orange-600);
+  --color-text-on-accent: var(--prim-blue-950);
+  --color-border-default: var(--prim-neutral-200);
+  --color-border-brand: var(--prim-blue-800);
+  --color-border-inverse: var(--prim-white-a24);
+  --color-border-accent: var(--prim-orange-500);
+  --color-accent: var(--prim-orange-500);
+  --color-bg-transparent: var(--prim-white-a0);
+  --color-border-transparent: var(--prim-neutral200-a0);
+  --color-bg-inverse-raised: var(--prim-white-a06);
+  --color-bg-placeholder: var(--prim-neutral-100);
+
+  /* Spacing */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-96: 96px;
+  --space-128: 128px;
+  --space-160: 160px;
+  --layout-margin-desktop: 72px;
+  --layout-margin-mobile: 24px;
+  --layout-gutter-desktop: 24px;
+  --layout-gutter-mobile: 16px;
+  --layout-section-desktop: var(--space-128);
+  --layout-section-mobile: var(--space-64);
+
+  /* Radius */
+  --radius-0: 0px;
+  --radius-4: 4px;
+  --radius-8: 8px;
+  --radius-full: 999px;
+
+  /* Ratio (image proportions) */
+  --ratio-16-9: 16 / 9;
+  --ratio-3-2: 3 / 2;
+  --ratio-4-3: 4 / 3;
+  --ratio-1-1: 1 / 1;
+  --ratio-4-5: 4 / 5;
+}

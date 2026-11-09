@@ -1,0 +1,35 @@
+---
+// "Selected Work" section: label + project cards in the order of src/data/projects.json.
+import ProjectCard from './ProjectCard.astro';
+import site from '../data/site.json';
+import projects from '../data/projects.json';
+---
+<section id="work" class="work" aria-labelledby="work-title">
+  <div class="container work__inner">
+    <h2 id="work-title" class="section-label">{site.work.label}</h2>
+    <ul class="work__grid" role="list">
+      {projects.map((project) => (
+        <li><ProjectCard project={project} /></li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .work {
+    padding-block: var(--section-pad);
+    background: var(--color-bg-page);
+  }
+  .work__inner { display: flex; flex-direction: column; gap: var(--space-32); }
+  .work__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-48);
+  }
+  @media (min-width: 768px) {
+    .work__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--layout-gutter-desktop);
+    }
+  }
+</style>

@@ -1,0 +1,256 @@
+---
+// First screen: slideshow ("Hero slideshow" component) + name, role and "Write me".
+// Slides change every 5 s with a 0.8 s cross-fade (as in the prototype); the indicators jump to a slide;
+// the button pauses / resumes. With "reduce motion" turned on, the slideshow does not play by itself.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Icon from './Icon.astro';
+import site from '../data/site.json';
+import slides from '../data/slides.json';
+
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/hero/*.{jpg,jpeg,png,webp,avif}', { eager: true });
+const imageFor = (name: string) => (name ? files[`../assets/hero/${name}`]?.default : undefined);
+const hero = site.hero;
+---
+<section
+  id="top"
+  class="hero on-dark"
+  aria-roledescription="carousel"
+  aria-label="Selected projects slideshow"
+  data-slide-ms={hero.slideSeconds * 1000}
+>
+  <div class="hero__slides" aria-live="off">
+    {slides.map((slide, i) => {
+      const img = imageFor(slide.image);
+      return (
+        <div
+          class:list={['hero__slide', { 'is-active': i === 0 }]}
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`${i + 1} of ${slides.length}: ${slide.label}`}
+          aria-hidden={i === 0 ? undefined : 'true'}
+        >
+          {img ? (
+            <Image
+              src={img}
+              alt={slide.imageAlt}
+              widths={[640, 960, 1440, 1920, 2560]}
+              sizes="100vw"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : undefined}
+              class="hero__image"
+            />
+          ) : (
+            <div class="hero__placeholder" />
+          )}
+        </div>
+      );
+    })}
+  </div>
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <div class="hero__inner">
+    <div class="hero__content">
+      <h1 class="hero__name t-h1">
+        {hero.nameFirstLine}<br /><em>{hero.nameSecondLine}</em>
+      </h1>
+      <p class="hero__role t-body-l">
+        {hero.role.map((line, i) => (<>{i > 0 && <br />}{line}</>))}
+      </p>
+      <a class="button button--on-dark" href="#contacts">
+        {hero.button}
+        <Icon name="arrow-up-right" />
+      </a>
+    </div>
+
+    <div class="hero__controls">
+      <div class="hero__indicators" role="group" aria-label="Choose a slide">
+        {slides.map((slide, i) => (
+          <button
+            class:list={['hero__indicator', { 'is-current': i === 0 }]}
+            type="button"
+            aria-label={`Show slide ${i + 1}: ${slide.label}`}
+            aria-current={i === 0 ? 'true' : undefined}
+            data-index={i}
+          >
+            <span class="hero__indicator-label t-label">{slide.label}</span>
+            <span class="hero__indicator-track"><span class="hero__indicator-progress"></span></span>
+          </button>
+        ))}
+      </div>
+      <button class="icon-button icon-button--dark hero__pause" type="button" aria-label="Pause slideshow">
+        <Icon name="pause" class="hero__icon-pause" />
+        <Icon name="play" class="hero__icon-play" />
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    min-height: max(600px, 100svh);
+    background: var(--color-bg-inverse);
+    color: var(--color-text-inverse);
+    overflow: hidden;
+  }
+
+  /* Slides: stacked, cross-fade */
+  .hero__slides,
+  .hero__slide,
+  .hero__scrim { position: absolute; inset: 0; }
+  .hero__slide { opacity: 0; transition: opacity 800ms var(--ease-in-out); }
+  .hero__slide.is-active { opacity: 1; }
+  .hero[data-jump] .hero__slide { transition-duration: 600ms; }
+  .hero__slide :global(.hero__image) { width: 100%; height: 100%; max-width: none; object-fit: cover; }
+  .hero__placeholder { width: 100%; height: 100%; background: var(--color-bg-brand); }
+
+  /* Legibility scrim from the layout: 20 % black at the top and bottom edges */
+  .hero__scrim {
+    background: linear-gradient(180deg, rgb(0 0 0 / 0.2) 0%, rgb(0 0 0 / 0) 24%, rgb(0 0 0 / 0) 64%, rgb(0 0 0 / 0.2) 100%);
+    pointer-events: none;
+  }
+
+  /* Layout — mobile / tablet: controls at the top under the header, text at the bottom */
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-48);
+    min-height: max(600px, 100svh);
+    max-width: calc(var(--content-max) + 2 * var(--page-margin));
+    margin-inline: auto;
+    padding: 88px var(--page-margin) 40px;
+  }
+  .hero__controls { order: -1; display: flex; align-items: flex-start; gap: var(--space-12); }
+  .hero__content { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-16); max-width: 636px; }
+
+  .hero__name { font-size: min(var(--type-h1), 10.1vw); }
+  .hero__name em { font-style: italic; }
+  .hero__role { color: var(--color-text-inverse-muted); }
+
+  /* Indicators ("Slide indicator": Upcoming / current / Done) */
+  .hero__indicators { display: flex; flex: 1; min-width: 0; gap: var(--space-8); }
+  .hero__indicator {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--space-12);
+    padding: var(--space-8) 0;
+    text-align: left;
+    color: var(--color-text-inverse-muted);
+    transition: color var(--dur-hover) var(--ease-out);
+  }
+  .hero__indicator-label { font-size: clamp(12px, 3.6vw, 14px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hero__indicator.is-current,
+  .hero__indicator.is-done { color: var(--color-text-inverse); }
+  @media (hover: hover) {
+    .hero__indicator:hover { color: var(--color-text-inverse); }
+  }
+  .hero__indicator-track { position: relative; height: 2px; background: var(--color-bg-inverse-subtle); overflow: hidden; }
+  .hero__indicator-progress {
+    position: absolute;
+    inset: 0;
+    background: var(--color-accent);
+    transform: scaleX(var(--progress, 0));
+    transform-origin: left center;
+  }
+  .hero__indicator.is-done .hero__indicator-progress { --progress: 1; background: var(--color-text-inverse-muted); }
+
+  .hero__pause :global(.hero__icon-play) { display: none; }
+  .hero[data-paused] .hero__pause :global(.hero__icon-pause) { display: none; }
+  .hero[data-paused] .hero__pause :global(.hero__icon-play) { display: block; }
+
+  @media (min-width: 768px) {
+    .hero__inner { padding-top: 120px; }
+    .hero__content { gap: var(--space-24); }
+    .hero__indicators { gap: var(--space-16); }
+  }
+
+  /* Desktop: text bottom-left, controls bottom-right */
+  @media (min-width: 1100px) {
+    .hero__scrim {
+      background: linear-gradient(180deg, rgb(0 0 0 / 0.2) 0%, rgb(0 0 0 / 0) 14%, rgb(0 0 0 / 0) 66%, rgb(0 0 0 / 0.2) 100%);
+    }
+    .hero__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      gap: var(--space-24);
+      padding: 0 var(--page-margin) clamp(var(--space-48), 5vw, 72px);
+    }
+    .hero__controls { order: 0; gap: var(--space-24); }
+  }
+</style>
+
+<script>
+  const hero = document.querySelector<HTMLElement>('.hero');
+  if (hero) {
+    const slides = [...hero.querySelectorAll<HTMLElement>('.hero__slide')];
+    const dots = [...hero.querySelectorAll<HTMLButtonElement>('.hero__indicator')];
+    const pauseBtn = hero.querySelector<HTMLButtonElement>('.hero__pause')!;
+    const duration = Number(hero.dataset.slideMs) || 5000;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    let current = 0;
+    let elapsed = 0;            // ms spent on the current slide
+    let last = 0;               // timestamp of the previous frame
+    let userPaused = reduceMotion.matches;
+    let offscreen = false;
+    let frame = 0;
+
+    const running = () => !userPaused && !offscreen && !document.hidden;
+
+    const render = () => {
+      dots.forEach((dot, i) => {
+        const isCurrent = i === current;
+        dot.classList.toggle('is-current', isCurrent);
+        dot.classList.toggle('is-done', i < current);
+        if (isCurrent) dot.setAttribute('aria-current', 'true'); else dot.removeAttribute('aria-current');
+        const bar = dot.querySelector<HTMLElement>('.hero__indicator-progress')!;
+        bar.style.setProperty('--progress', isCurrent ? String(Math.min(elapsed / duration, 1)) : '');
+      });
+    };
+
+    const show = (index: number, jump = false) => {
+      current = (index + slides.length) % slides.length;
+      elapsed = 0;
+      if (jump) hero.dataset.jump = ''; else delete hero.dataset.jump;
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('is-active', i === current);
+        if (i === current) slide.removeAttribute('aria-hidden'); else slide.setAttribute('aria-hidden', 'true');
+      });
+      render();
+    };
+
+    const tick = (now: number) => {
+      if (!running()) { frame = 0; return; }
+      elapsed += last ? now - last : 0;
+      last = now;
+      if (elapsed >= duration) show(current + 1);
+      else render();
+      frame = requestAnimationFrame(tick);
+    };
+
+    const sync = () => {
+      if (running() && !frame) { last = 0; frame = requestAnimationFrame(tick); }
+      if (!running() && frame) { cancelAnimationFrame(frame); frame = 0; }
+      if (userPaused) hero.dataset.paused = ''; else delete hero.dataset.paused;
+      pauseBtn.setAttribute('aria-label', userPaused ? 'Play slideshow' : 'Pause slideshow');
+    };
+
+    dots.forEach((dot) => dot.addEventListener('click', () => { show(Number(dot.dataset.index), true); sync(); }));
+    pauseBtn.addEventListener('click', () => { userPaused = !userPaused; sync(); });
+    document.addEventListener('visibilitychange', sync);
+    reduceMotion.addEventListener('change', (e) => { userPaused = e.matches; sync(); });
+    new IntersectionObserver(([entry]) => { offscreen = !entry.isIntersecting; sync(); }).observe(hero);
+
+    if (slides.length < 2) hero.querySelector<HTMLElement>('.hero__controls')!.hidden = true;
+    render();
+    sync();
+  }
+</script>

@@ -1,0 +1,97 @@
+---
+// "About" section: facets diagram, statement, selected brand experience and "Download resume".
+import FacetsDiagram from './FacetsDiagram.astro';
+import Icon from './Icon.astro';
+import SmartLink from './SmartLink.astro';
+import site from '../data/site.json';
+import { linkFor } from '../lib/links';
+
+const about = site.about;
+const logos = import.meta.glob<string>('../assets/brands/*.svg', { eager: true, query: '?url', import: 'default' });
+---
+<section id="about" class="about" aria-labelledby="about-title">
+  <div class="container about__grid">
+    <h2 id="about-title" class="section-label about__label">{about.label}</h2>
+    <p class="t-h2 about__statement">
+      {about.statement} <span class="accent-text">{about.statementAccent}</span>
+    </p>
+    <div class="about__diagram">
+      <FacetsDiagram top={about.facets.top} left={about.facets.left} right={about.facets.right} />
+    </div>
+    <div class="about__brands">
+      <p class="about__brands-label t-label">{about.brandsLabel}</p>
+      <ul class="about__logos" role="list">
+        {about.brands.map((brand) => {
+          const src = logos[`../assets/brands/${brand.logo}`];
+          return src ? <li><img src={src} alt={brand.name} height="30" loading="lazy" decoding="async" /></li> : null;
+        })}
+      </ul>
+    </div>
+    <div class="about__actions">
+      <SmartLink class="button button--primary" href={linkFor('resume')}>
+        {about.resumeButton}
+        <Icon name="arrow-down" />
+      </SmartLink>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    padding-block: var(--section-pad);
+    background: var(--color-bg-surface);
+  }
+
+  /* Mobile / tablet: one column in the order of the mobile layout */
+  .about__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-32);
+  }
+  .about__diagram { justify-self: center; width: min(100%, 324px); }
+
+  .about__brands {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+    padding: var(--space-16);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-8);
+  }
+  .about__brands-label { color: var(--color-text-secondary); }
+  .about__logos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-24) var(--space-32);
+  }
+  .about__logos img { height: 21px; width: auto; }
+
+  /* Desktop: diagram on the left, text column on the right */
+  @media (min-width: 1024px) {
+    .about__grid {
+      grid-template-columns: minmax(0, 416fr) minmax(0, 746fr);
+      grid-template-rows: auto auto auto 1fr;
+      grid-template-areas:
+        'diagram label'
+        'diagram statement'
+        'diagram brands'
+        'diagram actions';
+      column-gap: clamp(var(--space-48), 9.3vw, 134px);
+      row-gap: var(--space-32);
+    }
+    .about__label { grid-area: label; }
+    .about__statement { grid-area: statement; }
+    .about__diagram { grid-area: diagram; justify-self: start; align-self: start; width: min(100%, 360px); }
+    .about__brands { grid-area: brands; justify-self: start; }
+    .about__logos img { height: 30px; }
+    .about__actions { grid-area: actions; }
+  }
+
+  /* Wide screens: label and logos in one row, as in the desktop layout */
+  @media (min-width: 1340px) {
+    .about__brands { flex-direction: row; align-items: center; gap: var(--space-64); }
+    .about__brands-label { max-width: 108px; }
+    .about__logos { gap: var(--space-24) var(--space-64); }
+  }
+</style>

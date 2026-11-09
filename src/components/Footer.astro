@@ -1,0 +1,113 @@
+---
+// "Contact Footer": blue gradient (paint style "gradient"), statement, socials, links and "Back to top".
+import Icon from './Icon.astro';
+import SmartLink from './SmartLink.astro';
+import SocialButtons from './SocialButtons.astro';
+import site from '../data/site.json';
+import { linkFor } from '../lib/links';
+
+const f = site.footer;
+const email = site.links.email.trim();
+---
+<footer id="contacts" class="footer on-dark">
+  <div class="container footer__inner">
+    <h2 class="footer__statement t-display">
+      {f.statement} <span class="footer__accent">{f.statementAccent}</span>
+    </h2>
+
+    <div class="footer__links">
+      <div class="footer__social">
+        <SocialButtons tone="dark" />
+      </div>
+
+      <p class="footer__copy t-label">{f.copyright}</p>
+
+      <ul class="footer__list footer__networks" role="list" aria-label="Networks">
+        <li><SmartLink class="nav-link nav-link--dark" href={linkFor('telegram')}>Telegram</SmartLink></li>
+        <li><SmartLink class="nav-link nav-link--dark" href={linkFor('behance')}>Behance</SmartLink></li>
+        <li><SmartLink class="nav-link nav-link--dark" href={linkFor('linkedin')}>LinkedIn</SmartLink></li>
+      </ul>
+
+      <ul class="footer__list footer__contact" role="list" aria-label="Contact">
+        <li><SmartLink class="nav-link nav-link--dark" href={linkFor('email')}>{email || f.emailPlaceholder}</SmartLink></li>
+        <li><a class="nav-link nav-link--dark" href="#work">{f.portfolio}</a></li>
+        <li><SmartLink class="nav-link nav-link--dark" href={linkFor('resume')}>{f.resume}</SmartLink></li>
+      </ul>
+    </div>
+
+    <a class="footer__top" href="#top" data-footer-top>
+      <span>{f.backToTop}</span>
+      <span class="footer__top-circle"><Icon name="arrow-up" /></span>
+    </a>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: linear-gradient(180deg, var(--color-bg-inverse) 0%, #2d60b4 100%);
+    color: var(--color-text-inverse);
+    padding-top: clamp(var(--space-128), 11.1vw, var(--space-160));
+    padding-bottom: calc(var(--space-64) + env(safe-area-inset-bottom));
+  }
+  .footer__inner { display: flex; flex-direction: column; gap: var(--space-64); }
+
+  .footer__statement { max-width: 856px; text-wrap: balance; }
+  .footer__accent { color: var(--color-accent); }
+
+  /* Mobile: socials → contact links → copyright */
+  .footer__links { display: flex; flex-direction: column; gap: var(--space-64); }
+  .footer__social { order: 1; }
+  .footer__contact { order: 2; }
+  .footer__copy { order: 3; color: var(--color-text-inverse-muted); }
+  .footer__list { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-12); }
+  .footer__list.footer__networks { display: none; }
+  .footer__list .nav-link { white-space: normal; overflow-wrap: anywhere; }
+
+  /* "Back to top" bar */
+  .footer__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-16);
+    min-height: 56px;
+    padding: var(--space-8) var(--space-12) var(--space-8) var(--space-24);
+    border-radius: var(--radius-4);
+    background: var(--color-bg-inverse-raised);
+    color: var(--color-text-inverse);
+    transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+  }
+  .footer__top-circle {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex: none;
+    border: 1px solid var(--color-border-inverse);
+    border-radius: var(--radius-full);
+    transition: border-color var(--dur-hover) var(--ease-out);
+  }
+  .footer__top-circle :global(.icon) { transition: transform var(--dur-hover) var(--ease-out); }
+  @media (hover: hover) {
+    .footer__top:hover { background: var(--color-bg-accent); color: var(--color-text-on-accent); }
+    .footer__top:hover .footer__top-circle { border-color: var(--color-text-on-accent); }
+    .footer__top:hover .footer__top-circle :global(.icon) { transform: translateY(-2px); }
+  }
+
+  /* Desktop: four columns as in the layout (416 / 306 / 196 / 306) */
+  @media (min-width: 1024px) {
+    .footer { padding-bottom: calc(var(--space-48) + env(safe-area-inset-bottom)); }
+    .footer__inner { gap: var(--space-96); }
+    .footer__statement { letter-spacing: -0.03em; }
+    .footer__links {
+      display: grid;
+      grid-template-columns: minmax(0, 416fr) minmax(0, 306fr) minmax(0, 196fr) minmax(max-content, 306fr);
+      gap: var(--layout-gutter-desktop);
+      align-items: start;
+    }
+    .footer__social, .footer__contact, .footer__copy { order: 0; }
+    .footer__copy { padding: var(--space-8) var(--space-12); }
+    .footer__list.footer__networks { display: flex; }
+    .footer__list { gap: var(--space-4); }
+    .footer__list .nav-link { white-space: nowrap; }
+  }
+</style>

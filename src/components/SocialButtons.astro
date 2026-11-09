@@ -1,0 +1,30 @@
+---
+// Row of icon buttons (Telegram, Behance, Mail, LinkedIn) — "Icon button" component, Light or Dark tone.
+import Icon from './Icon.astro';
+import SmartLink from './SmartLink.astro';
+import { linkFor } from '../lib/links';
+
+type Network = 'telegram' | 'behance' | 'mail' | 'linkedin';
+interface Props { tone: 'light' | 'dark'; items?: Network[]; class?: string }
+const { tone, items = ['telegram', 'behance', 'mail', 'linkedin'], class: className } = Astro.props;
+
+const meta: Record<Network, { label: string; href: string }> = {
+  telegram: { label: 'Telegram', href: linkFor('telegram') },
+  behance: { label: 'Behance', href: linkFor('behance') },
+  mail: { label: 'Email', href: linkFor('email') },
+  linkedin: { label: 'LinkedIn', href: linkFor('linkedin') },
+};
+---
+<ul class:list={['socials', className]}>
+  {items.map((key) => (
+    <li>
+      <SmartLink href={meta[key].href} class={`icon-button icon-button--${tone}`} label={meta[key].label}>
+        <Icon name={key} />
+      </SmartLink>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .socials { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+</style>

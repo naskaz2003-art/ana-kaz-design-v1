@@ -1,0 +1,26 @@
+---
+// A link that stays honest: with an address it is a normal <a>; without one it is shown exactly the same
+// but is not clickable (no "#" placeholders). Addresses live in src/data/site.json and src/data/projects.json.
+import { isExternal } from '../lib/links';
+
+interface Props {
+  href?: string;
+  class?: string;
+  label?: string;          // accessible name when the visible content is only an icon
+  [key: string]: unknown;
+}
+const { href = '', class: className, label, ...rest } = Astro.props;
+const external = href !== '' && isExternal(href);
+---
+{href ? (
+  <a
+    href={href}
+    class={className}
+    aria-label={label}
+    target={external ? '_blank' : undefined}
+    rel={external ? 'noopener noreferrer' : undefined}
+    {...rest}
+  ><slot /></a>
+) : (
+  <span class:list={[className, 'is-pending']} role={label ? 'img' : undefined} aria-label={label} {...rest}><slot /></span>
+)}

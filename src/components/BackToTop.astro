@@ -1,0 +1,79 @@
+---
+// Pinned "back to top" button (Figma "Frame 49": 48 px circle, frosted white, arrow up; hover — orange).
+// Appears after the first screen and hides while the footer "Back to top" bar is on screen, so the two never double up.
+import Icon from './Icon.astro';
+---
+<a class="to-top" href="#top" aria-label="Back to top" data-visible="false" tabindex="-1">
+  <Icon name="arrow-up" />
+</a>
+
+<style>
+  .to-top {
+    position: fixed;
+    z-index: 40;
+    right: calc(var(--space-32) + env(safe-area-inset-right));
+    bottom: calc(var(--space-48) + env(safe-area-inset-bottom));
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-full);
+    background: var(--color-bg-header);
+    color: var(--color-text-primary);
+    -webkit-backdrop-filter: blur(var(--blur-header));
+    backdrop-filter: blur(var(--blur-header));
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition:
+      opacity var(--dur-card) var(--ease-out),
+      transform var(--dur-card) var(--ease-out),
+      visibility 0s linear var(--dur-card),
+      background-color var(--dur-hover) var(--ease-out),
+      color var(--dur-hover) var(--ease-out);
+  }
+  .to-top[data-visible='true'] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity var(--dur-card) var(--ease-out),
+      transform var(--dur-card) var(--ease-out),
+      visibility 0s,
+      background-color var(--dur-hover) var(--ease-out),
+      color var(--dur-hover) var(--ease-out);
+  }
+  @media (hover: hover) {
+    .to-top:hover { background: var(--color-bg-accent); color: var(--color-text-inverse); }
+  }
+  @media (min-width: 768px) {
+    .to-top {
+      right: calc(var(--space-16) + env(safe-area-inset-right));
+      bottom: calc(var(--space-96) + env(safe-area-inset-bottom));
+    }
+  }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLAnchorElement>('.to-top');
+  const footerTop = document.querySelector<HTMLElement>('[data-footer-top]');
+  const header = document.querySelector<HTMLElement>('.site-header');
+  if (btn) {
+    let footerBarVisible = false;
+    const update = () => {
+      const pastHero = window.scrollY > window.innerHeight * 0.75;
+      const menuOpen = header?.dataset.menu === 'open';
+      const show = pastHero && !footerBarVisible && !menuOpen;
+      btn.dataset.visible = String(show);
+      btn.tabIndex = show ? 0 : -1;
+    };
+    if (footerTop) {
+      new IntersectionObserver(([entry]) => { footerBarVisible = entry.isIntersecting; update(); }, { rootMargin: '0px 0px 80px 0px' }).observe(footerTop);
+    }
+    if (header) new MutationObserver(update).observe(header, { attributes: true, attributeFilter: ['data-menu'] });
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+</script>

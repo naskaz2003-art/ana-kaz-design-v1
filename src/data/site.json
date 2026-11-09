@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "title": "Kaznacheevskaia Anastasia — Communication designer",
+    "description": "Communication designer. 4+ years in brand and digital design.",
+    "lang": "en"
+  },
+
+  "links": {
+    "resume": "",
+    "telegram": "",
+    "behance": "",
+    "linkedin": "",
+    "email": ""
+  },
+
+  "nav": {
+    "portfolio": "Portfolio",
+    "resume": "Resume",
+    "contacts": "Contacts"
+  },
+
+  "hero": {
+    "nameFirstLine": "Kaznacheevskaia",
+    "nameSecondLine": "Anastasia",
+    "role": ["Communication designer.", "4+ years in brand and digital design."],
+    "button": "Write me",
+    "slideSeconds": 5
+  },
+
+  "work": {
+    "label": "Selected projects"
+  },
+
+  "about": {
+    "label": "About me",
+    "statement": "I build clear visual systems that",
+    "statementAccent": "connect brands with people.",
+    "facets": { "top": "Audience", "left": "Visuals", "right": "Business" },
+    "brandsLabel": "Selected brand experience",
+    "brands": [
+      { "name": "ectoControl", "logo": "ectocontrol.svg" },
+      { "name": "Beget", "logo": "beget.svg" },
+      { "name": "SteadyControl HORECA", "logo": "steadycontrol-horeca.svg" }
+    ],
+    "resumeButton": "Download resume"
+  },
+
+  "footer": {
+    "statement": "Let’s create something",
+    "statementAccent": "together.",
+    "emailPlaceholder": "ana.kaz.design@example",
+    "portfolio": "Portfolio",
+    "resume": "Resume / CV",
+    "copyright": "2026 © AnaKaz",
+    "backToTop": "Back to top"
+  }
+}

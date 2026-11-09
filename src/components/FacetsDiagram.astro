@@ -1,0 +1,26 @@
+---
+// "Facets diagram": isometric cube (blue/100, blue/800, blue/300) and three labels. Drawn as SVG so it scales without losing sharpness (360 px on desktop, 324 px on mobile).
+interface Props { top: string; left: string; right: string }
+const { top, left, right } = Astro.props;
+---
+<svg class="facets" viewBox="0 0 360 360" role="img" aria-label={`${top}, ${left}, ${right}`}>
+  <path d="M180 54 290 117.25 180 180.5 70 117.25Z" fill="var(--prim-blue-100)" />
+  <path d="M70 117.25 180 180.5V307L70 243.75Z" fill="var(--prim-blue-800)" />
+  <path d="M180 180.5 290 117.25V243.75L180 307Z" fill="var(--prim-blue-300)" />
+  <g class="facets__labels" aria-hidden="true">
+    <text x="180" y="32" text-anchor="middle">{top}</text>
+    <text x="40" y="335" text-anchor="start">{left}</text>
+    <text x="320" y="335" text-anchor="end">{right}</text>
+  </g>
+</svg>
+
+<style>
+  .facets { width: 100%; height: auto; }
+  .facets__labels {
+    fill: var(--color-text-secondary);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.005em;
+  }
+</style>
