@@ -22,16 +22,6 @@
     { "type": "image", "ratio": "16:9", "image": "", "imageAlt": "", "caption": "" },
 
     {
-      "type": "summary",
-      "label": "Summary",
-      "fields": [
-        { "label": "My role", "value": "Graphic design" },
-        { "label": "Team and timeline", "value": "Marketing team" },
-        { "label": "Outcome", "value": "Successful event" }
-      ]
-    },
-
-    {
       "type": "gallery",
       "ratio": "4:5",
       "items": [
