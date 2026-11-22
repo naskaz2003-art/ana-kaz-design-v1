@@ -1,18 +1,18 @@
 {
-  "title": "Event design",
+  "title": "SteadyControl HoReCa at GASTREET",
   "hero": { "image": "", "imageAlt": "" },
   "meta": [
-    { "label": "Client / brand", "value": "SteadyControl" },
+    { "label": "Client / brand", "value": "SteadyControl HoReCa" },
     { "label": "Project type", "value": "Event design" },
-    { "label": "Year", "value": "Jun 10, 2024" }
+    { "label": "Year", "value": "2024" }
   ],
 
   "blocks": [
     {
       "type": "text",
       "heading": "Challenge and context",
-      "lead": "Creation of promotional and exhibition materials for SteadyControl’s participation in GASTREET 2024.",
-      "context": "SteadyControl - staff efficiency improvement system",
+      "lead": "SteadyControl HoReCa — разработчик системы контроля и управления персоналом на основе AI, аудио- и видеоаналитики. Участие в GASTREET должно было познакомить с продуктом владельцев ресторанного бизнеса и руководителей, которые ежедневно работают с командами.",
+      "context": "В пространстве, где деловая программа соседствует с отдыхом и неформальным общением, бренду требовалось создать повод для знакомства и диалога. Важной частью коммуникации стало преодоление настороженности к технологиям контроля: показать их пользу для обучения сотрудников, развития сервиса и роста бизнеса.",
       "fields": [
         { "label": "Audience", "value": "Owners of business in HoReCa" },
         { "label": "Business need", "value": "Needed a design for place, marketing events, social media, video, printed materials and visual metaphore for entire event." }
@@ -33,12 +33,10 @@
 
     {
       "type": "text",
-      "heading": "Design system and solution",
+      "heading": "Бизнес делает персонал",
       "paragraphs": [
-        "SteadyControl needed a cohesive set of visual materials to effectively represent the brand at GASTREET 2024 — one of the key events for the hospitality industry.",
-        "The goal was to create a consistent exhibition identity that would attract visitors’ attention, communicate the company’s value proposition, and support brand recognition across different physical touchpoints.",
-        "Developed a set of exhibition materials, including branded visual assets and promotional elements, following SteadyControl’s existing brand guidelines.\nCreated a unified visual system for the company’s presence at the event.\nPrepared a complete set of exhibition assets adapted for multiple physical formats.",
-        "Improved brand consistency across offline communication channels.\nReduced preparation time for future events by establishing reusable design templates and visual guidelines."
+        "В основе концепции — сообщение «Бизнес делает персонал». Оно выводит на первый план сотрудников: именно их работа формирует впечатление гостей и влияет на результаты бизнеса.",
+        "SteadyControl выступает помощником, который позволяет руководителям поддерживать и развивать свои команды."
       ]
     },
 
